@@ -146,10 +146,6 @@ export default function FileInteractionSection() {
     console.log("Message sent:", message, "with files:", attachedFiles);
   };
 
-  const handleTtsSettingsChange = (settings: TTSSettings) => {
-    console.log("TTS settings changed:", settings);
-  };
-
   const selectedFileForMenuData = selectedFileForMenu
     ? files.find((f) => f.id === selectedFileForMenu)
     : null;
@@ -257,7 +253,6 @@ export default function FileInteractionSection() {
             showStartScreen={selectedFiles.length === 0}
             apiEndpoint="/api/chat"
             onMessageSent={handleMessageSent}
-            onTtsSettingsChange={handleTtsSettingsChange}
           />
         </Box>
       </Box>

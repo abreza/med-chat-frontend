@@ -6,6 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { GlobalStyles } from "@mui/material";
 import theme from "../theme";
+import StoreProvider from "@/providers/StoreProvider";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -44,7 +45,7 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             <CssBaseline />
             {globalStyles}
-            {children}
+            <StoreProvider>{children}</StoreProvider>
           </ThemeProvider>
         </CacheProvider>
       </body>

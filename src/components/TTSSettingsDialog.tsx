@@ -19,22 +19,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import SpeedIcon from "@mui/icons-material/Speed";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setTtsSettings,
+  selectTtsSettings,
+  TTSSettingsState,
+} from "@/lib/redux/slices/ttsSlice";
 
 interface TTSSettingsDialogProps {
   open: boolean;
   onClose: () => void;
-  settings: {
-    voiceKey: string;
-    speed: number;
-    volume: number;
-  };
-  onSettingsChange: (
-    newSettings: Partial<{
-      voiceKey: string;
-      speed: number;
-      volume: number;
-    }>
-  ) => void;
 }
 
 const AVAILABLE_VOICES = [
@@ -49,19 +43,12 @@ const AVAILABLE_VOICES = [
 export default function TTSSettingsDialog({
   open,
   onClose,
-  settings,
-  onSettingsChange,
 }: TTSSettingsDialogProps) {
-  const handleVoiceChange = (voiceKey: string) => {
-    onSettingsChange({ voiceKey });
-  };
+  const dispatch = useDispatch();
+  const settings = useSelector(selectTtsSettings);
 
-  const handleSpeedChange = (_: Event, value: number | number[]) => {
-    onSettingsChange({ speed: value as number });
-  };
-
-  const handleVolumeChange = (_: Event, value: number | number[]) => {
-    onSettingsChange({ volume: value as number });
+  const handleSettingsChange = (newSettings: Partial<TTSSettingsState>) => {
+    dispatch(setTtsSettings(newSettings));
   };
 
   return (
@@ -96,7 +83,6 @@ export default function TTSSettingsDialog({
 
       <DialogContent sx={{ pt: 2 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          {/* Voice Selection */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <RecordVoiceOverIcon sx={{ mr: 1, color: "primary.main" }} />
@@ -109,7 +95,9 @@ export default function TTSSettingsDialog({
               <Select
                 value={settings.voiceKey}
                 label="صدای گوینده"
-                onChange={(e) => handleVoiceChange(e.target.value)}
+                onChange={(e) =>
+                  handleSettingsChange({ voiceKey: e.target.value })
+                }
               >
                 {AVAILABLE_VOICES.map((voice) => (
                   <MenuItem key={voice.key} value={voice.key}>
@@ -122,7 +110,6 @@ export default function TTSSettingsDialog({
 
           <Divider />
 
-          {/* Speed Control */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <SpeedIcon sx={{ mr: 1, color: "primary.main" }} />
@@ -133,7 +120,9 @@ export default function TTSSettingsDialog({
             <Box sx={{ px: 2 }}>
               <Slider
                 value={settings.speed}
-                onChange={handleSpeedChange}
+                onChange={(_, value) =>
+                  handleSettingsChange({ speed: value as number })
+                }
                 min={0.5}
                 max={2}
                 step={0.1}
@@ -151,7 +140,6 @@ export default function TTSSettingsDialog({
 
           <Divider />
 
-          {/* Volume Control */}
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <VolumeUpIcon sx={{ mr: 1, color: "primary.main" }} />
@@ -162,7 +150,9 @@ export default function TTSSettingsDialog({
             <Box sx={{ px: 2 }}>
               <Slider
                 value={settings.volume}
-                onChange={handleVolumeChange}
+                onChange={(_, value) =>
+                  handleSettingsChange({ volume: value as number })
+                }
                 min={0}
                 max={1}
                 step={0.1}

@@ -1,24 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Box, Container } from "@mui/material";
-import ChatArea, { TTSSettings } from "@/components/Chat/ChatArea";
+import ChatArea from "@/components/Chat/ChatArea";
 import ChatHeader from "@/components/ChatHeader";
 
 export default function ChatSection() {
-  const [ttsSettings, setTtsSettings] = useState<TTSSettings>({
-    voiceKey: "fa_IR-mana-medium",
-    speed: 1,
-    volume: 1,
-  });
-
-  const handleTtsSettingsChange = (newSettings: TTSSettings) => {
-    setTtsSettings(newSettings);
-  };
-
-  const handleTtsSettingsUpdate = (newSettings: Partial<TTSSettings>) => {
-    setTtsSettings((prev) => ({ ...prev, ...newSettings }));
-  };
+  // No more TTS state management here!
+  // It's all handled by Redux.
 
   return (
     <Box
@@ -29,10 +18,7 @@ export default function ChatSection() {
         overflow: "hidden",
       }}
     >
-      <ChatHeader
-        ttsSettings={ttsSettings}
-        onTtsSettingsChange={handleTtsSettingsUpdate}
-      />
+      <ChatHeader />
 
       <Container
         maxWidth="md"
@@ -48,7 +34,6 @@ export default function ChatSection() {
           placeholder="سوال پزشکی یا علائم خود را شرح دهید..."
           showStartScreen={true}
           apiEndpoint="/api/chat"
-          onTtsSettingsChange={handleTtsSettingsChange}
           showHeader={true}
         />
       </Container>

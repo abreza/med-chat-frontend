@@ -6,31 +6,12 @@ import {
   IconButton,
   Box,
   Avatar,
-  Badge,
 } from "@mui/material";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import { Settings } from "@mui/icons-material";
 import TTSSettingsDialog from "./TTSSettingsDialog";
 
-interface ChatHeaderProps {
-  ttsSettings: {
-    voiceKey: string;
-    speed: number;
-    volume: number;
-  };
-  onTtsSettingsChange: (
-    newSettings: Partial<{
-      voiceKey: string;
-      speed: number;
-      volume: number;
-    }>
-  ) => void;
-}
-
-export default function ChatHeader({
-  ttsSettings,
-  onTtsSettingsChange,
-}: ChatHeaderProps) {
+export default function ChatHeader() {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleSettingsClick = () => {
@@ -85,23 +66,12 @@ export default function ChatHeader({
               },
             }}
           >
-            <Badge
-              variant="dot"
-              color="primary"
-              invisible={ttsSettings.voiceKey === "fa_IR-mana-medium"}
-            >
-              <Settings />
-            </Badge>
+            <Settings />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      <TTSSettingsDialog
-        open={settingsOpen}
-        onClose={handleSettingsClose}
-        settings={ttsSettings}
-        onSettingsChange={onTtsSettingsChange}
-      />
+      <TTSSettingsDialog open={settingsOpen} onClose={handleSettingsClose} />
     </>
   );
 }

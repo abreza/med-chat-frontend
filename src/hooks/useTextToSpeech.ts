@@ -1,17 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Message } from "ai";
-
-interface TTSSettings {
-  voiceKey: string;
-  speed: number;
-  volume: number;
-}
-
-const DEFAULT_TTS_SETTINGS: TTSSettings = {
-  voiceKey: "fa_IR-mana-medium",
-  speed: 1,
-  volume: 1,
-};
+import { useSelector } from "react-redux";
+import { selectTtsSettings } from "@/lib/redux/slices/ttsSlice";
 
 export const useTextToSpeech = () => {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -22,19 +12,27 @@ export const useTextToSpeech = () => {
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
-  const [ttsSettings, setTtsSettings] =
-    useState<TTSSettings>(DEFAULT_TTS_SETTINGS);
+  const ttsSettings = useSelector(selectTtsSettings);
 
   useEffect(() => {
-    const stored = localStorage.getItem("tts-settings");
-    if (stored) {
-      setTtsSettings(JSON.parse(stored));
+    return () => {
+      if (audio) {
+        audio.pause();
+      }
+    };
+  }, [audio]);
+
+  const stopAudio = useCallback(() => {
+    if (audio) {
+      audio.pause();
     }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("tts-settings", JSON.stringify(ttsSettings));
-  }, [ttsSettings]);
+    setAudio(null);
+    setActiveMessage(null);
+    setIsPlaying(false);
+    setIsLoading(false);
+    setProgress(0);
+    setDuration(0);
+  }, [audio]);
 
   useEffect(() => {
     if (!audio) return;
@@ -56,31 +54,7 @@ export const useTextToSpeech = () => {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [audio, ttsSettings.volume]);
-
-  useEffect(() => {
-    return () => {
-      if (audio) {
-        audio.pause();
-      }
-    };
-  }, [audio]);
-
-  const updateTtsSettings = useCallback((newSettings: Partial<TTSSettings>) => {
-    setTtsSettings((prev) => ({ ...prev, ...newSettings }));
-  }, []);
-
-  const stopAudio = useCallback(() => {
-    if (audio) {
-      audio.pause();
-    }
-    setAudio(null);
-    setActiveMessage(null);
-    setIsPlaying(false);
-    setIsLoading(false);
-    setProgress(0);
-    setDuration(0);
-  }, [audio]);
+  }, [audio, ttsSettings.volume, stopAudio]);
 
   const playAudio = useCallback(
     async (message: Message) => {
@@ -127,7 +101,7 @@ export const useTextToSpeech = () => {
         const blob = await response.blob();
         const newAudio = new Audio(URL.createObjectURL(blob));
         newAudio.volume = ttsSettings.volume;
-        newAudio.playbackRate = ttsSettings.speed;
+        // newAudio.playbackRate = ttsSettings.speed;
 
         setAudio(newAudio);
         newAudio.play();
@@ -146,15 +120,7 @@ export const useTextToSpeech = () => {
         stopAudio();
       }
     },
-    [
-      activeMessage?.id,
-      audio,
-      isPlaying,
-      ttsSettings.voiceKey,
-      ttsSettings.speed,
-      ttsSettings.volume,
-      stopAudio,
-    ]
+    [activeMessage?.id, audio, isPlaying, ttsSettings, stopAudio]
   );
 
   const togglePlayPause = useCallback(() => {
@@ -189,7 +155,5 @@ export const useTextToSpeech = () => {
     progress,
     duration,
     error,
-    ttsSettings,
-    updateTtsSettings,
   };
 };

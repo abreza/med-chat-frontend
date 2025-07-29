@@ -62,7 +62,6 @@ interface ChatAreaProps {
   apiEndpoint?: string;
   onMessageSent?: (message: string, attachedFiles?: AttachedFile[]) => void;
 
-  onTtsSettingsChange?: (settings: TTSSettings) => void;
   showHeader?: boolean;
 }
 
@@ -77,7 +76,6 @@ export default function ChatArea({
   startScreenSuggestions = [],
   apiEndpoint = "/api/chat",
   onMessageSent,
-  onTtsSettingsChange,
   showHeader = false,
 }: ChatAreaProps) {
   const [input, setInput] = useState("");
@@ -101,12 +99,7 @@ export default function ChatArea({
     progress,
     isLoading: isTtsLoading,
     duration,
-    ttsSettings,
   } = useTextToSpeech();
-
-  useEffect(() => {
-    onTtsSettingsChange?.(ttsSettings);
-  }, [ttsSettings, onTtsSettingsChange]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
