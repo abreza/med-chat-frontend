@@ -14,12 +14,12 @@ import { Upload as UploadIcon, Chat as ChatIcon } from "@mui/icons-material";
 import FileTree from "@/components/FileManagement/FileTree";
 import FileUploadDialog from "@/components/FileManagement/FileUploadDialog";
 import FileContextMenu from "@/components/FileManagement/FileContextMenu";
-import NiftiViewer from "@/components/FileManagement/NiftiViewer";
-import ChatArea, { TTSSettings } from "@/components/Chat/ChatArea";
+import ChatArea from "@/components/Chat/ChatArea";
 import { FileItem, AttachedFile } from "@/components/FileManagement/types";
-import { mockFiles } from "../FileManagement/mockData";
+import { mockFiles } from "../../components/FileManagement/mockData";
+import NiftiViewer from "@/components/Nifti/NiftiViewer";
 
-export default function FileInteractionSection() {
+export default function FilesPage() {
   const [files, setFiles] = useState<FileItem[]>(mockFiles);
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [expandedFolders, setExpandedFolders] = useState<string[]>([

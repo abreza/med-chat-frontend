@@ -4,7 +4,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import CloseIcon from "@mui/icons-material/Close";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
-import NoRTLFlip from "./NoRTLFlip";
+import NoRTLFlip from "../atom/NoRTLFlip";
 
 interface AudioPlayerProps {
   isPlaying: boolean;

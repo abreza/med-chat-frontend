@@ -7,6 +7,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { GlobalStyles } from "@mui/material";
 import theme from "../theme";
 import StoreProvider from "@/providers/StoreProvider";
+import NavigationSidebar from "@/components/Navigation/NavigationSidebar";
+import { Box } from "@mui/material";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -45,7 +47,29 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             <CssBaseline />
             {globalStyles}
-            <StoreProvider>{children}</StoreProvider>
+            <StoreProvider>
+              <Box
+                sx={{
+                  display: "flex",
+                  height: "100vh",
+                  bgcolor: "background.default",
+                  background:
+                    "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+                }}
+              >
+                <NavigationSidebar />
+                <Box
+                  sx={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    overflow: "hidden",
+                  }}
+                >
+                  {children}
+                </Box>
+              </Box>
+            </StoreProvider>
           </ThemeProvider>
         </CacheProvider>
       </body>

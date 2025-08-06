@@ -3,12 +3,9 @@
 import React from "react";
 import { Box, Container } from "@mui/material";
 import ChatArea from "@/components/Chat/ChatArea";
-import ChatHeader from "@/components/ChatHeader";
+import ChatHeader from "@/components/Chat/ChatHeader";
 
-export default function ChatSection() {
-  // No more TTS state management here!
-  // It's all handled by Redux.
-
+export default function ChatPage() {
   return (
     <Box
       sx={{

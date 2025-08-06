@@ -21,11 +21,11 @@ import {
   Description as FileIcon,
 } from "@mui/icons-material";
 import { useChat } from "@ai-sdk/react";
-import Message from "../Message";
-import NoRTLFlip from "../NoRTLFlip";
-import ChatStartScreen from "../ChatStartScreen";
-import AudioPlayer from "../AudioPlayer";
-import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import Message from "./Message";
+import NoRTLFlip from "../atom/NoRTLFlip";
+import ChatStartScreen from "./ChatStartScreen";
+import AudioPlayer from "../Audio/AudioPlayer";
+import { useTextToSpeech } from "@/components/Audio/hooks/useTextToSpeech";
 
 interface AttachedFile {
   id: string;

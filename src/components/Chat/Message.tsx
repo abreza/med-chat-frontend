@@ -19,7 +19,7 @@ import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import ShareIcon from "@mui/icons-material/Share";
 import { Message as MessageType } from "ai";
-import NoRTLFlip from "./NoRTLFlip";
+import NoRTLFlip from "../atom/NoRTLFlip";
 
 interface MessageProps {
   message: MessageType;

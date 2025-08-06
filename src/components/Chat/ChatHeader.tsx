@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import { Settings } from "@mui/icons-material";
-import TTSSettingsDialog from "./TTSSettingsDialog";
+import TTSSettingsDialog from "../Audio/TTSSettingsDialog";
 
 export default function ChatHeader() {
   const [settingsOpen, setSettingsOpen] = useState(false);
