@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
+    const file = formData.get("file") as File | null;
+    if (!file) {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
 
     const backendResponse = await fetch(`${process.env.BACKEND_URL}/segment`, {
       method: "POST",
@@ -10,23 +14,26 @@ export async function POST(request: NextRequest) {
     });
 
     if (!backendResponse.ok) {
-      throw new Error(`Backend responded with ${backendResponse.status}`);
+      const errorBody = await backendResponse.text();
+      console.error(
+        `Backend responded with ${backendResponse.status}: ${errorBody}`
+      );
+      return NextResponse.json(
+        {
+          error:
+            `Backend Error: ${errorBody}` || "Failed to perform segmentation",
+        },
+        { status: backendResponse.status }
+      );
     }
 
-    const segmentedFile = await backendResponse.blob();
-    const patientId = backendResponse.headers.get("X-Patient-ID");
+    const segmentationData = await backendResponse.json();
 
-    return new NextResponse(segmentedFile, {
-      headers: {
-        "Content-Type": "application/gzip",
-        "Content-Disposition": `attachment; filename="${patientId}_segmentation.nii.gz"`,
-        "X-Patient-ID": patientId || "unknown",
-      },
-    });
+    return NextResponse.json(segmentationData);
   } catch (error) {
-    console.error("Segmentation error:", error);
+    console.error("Segmentation API route error:", error);
     return NextResponse.json(
-      { error: "Failed to perform segmentation" },
+      { error: "An internal server error occurred" },
       { status: 500 }
     );
   }

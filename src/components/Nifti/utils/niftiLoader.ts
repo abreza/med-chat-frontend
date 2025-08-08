@@ -3,24 +3,26 @@ import * as nifti from "nifti-reader-js";
 
 export interface NiftiData {
   header: any;
-  image: ArrayBuffer;
+  image: ArrayBuffer; // This will be the decompressed image data buffer
   typedData: any;
   dims: number[];
   pixdims: number[];
 }
 
 export class NiftiLoader {
-  static async loadNiftiFile(url: string): Promise<NiftiData> {
-    const resp = await fetch(url);
-    if (!resp.ok)
-      throw new Error(`Failed to fetch NIfTI file: ${resp.statusText}`);
-    const arrayBuffer = await resp.arrayBuffer();
-
+  /**
+   * Parses a NIfTI file from an ArrayBuffer.
+   * @param arrayBuffer The raw file buffer (can be compressed or uncompressed).
+   * @returns A Promise resolving to the parsed NiftiData.
+   */
+  static parseNifti(arrayBuffer: ArrayBuffer): NiftiData {
     const data = nifti.isCompressed(arrayBuffer)
       ? (nifti.decompress(arrayBuffer) as ArrayBuffer)
       : arrayBuffer;
 
-    if (!nifti.isNIFTI(data)) throw new Error("File is not a valid NIfTI file");
+    if (!nifti.isNIFTI(data)) {
+      throw new Error("File is not a valid NIfTI file");
+    }
 
     const header = nifti.readHeader(data);
     const image = nifti.readImage(header, data);
@@ -43,6 +45,7 @@ export class NiftiLoader {
         typedData = new Float64Array(image);
         break;
       default:
+        // Fallback for other data types
         typedData = new Float32Array(image);
     }
 
@@ -53,6 +56,16 @@ export class NiftiLoader {
       dims: header.dims.slice(1, 4),
       pixdims: header.pixDims.slice(1, 4),
     };
+  }
+
+  static async loadNiftiFile(url: string): Promise<NiftiData> {
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      throw new Error(`Failed to fetch NIfTI file: ${resp.statusText}`);
+    }
+    const arrayBuffer = await resp.arrayBuffer();
+
+    return this.parseNifti(arrayBuffer);
   }
 
   static getSliceData(
@@ -106,22 +119,6 @@ export class NiftiLoader {
         return slice;
       }
     }
-  }
-
-  static normalizeIntensity(data: Float32Array): Uint8ClampedArray {
-    if (!data.length) return new Uint8ClampedArray(0);
-    let min = data[0],
-      max = data[0];
-    for (let i = 1; i < data.length; i++) {
-      const v = data[i];
-      if (v < min) min = v;
-      if (v > max) max = v;
-    }
-    const range = max - min || 1;
-    const out = new Uint8ClampedArray(data.length);
-    for (let i = 0; i < data.length; i++)
-      out[i] = Math.round(((data[i] - min) / range) * 255);
-    return out;
   }
 
   static getIntensityStats(data: Float32Array) {

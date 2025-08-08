@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { UseNiftiViewerResult } from "./hooks/useNiftiViewer";
 import ViewConfigControls from "./ViewConfigControls";
+import { UseNiftiViewerResult } from "./hooks/nifti-viewer-types";
 
 type ViewerCanvasProps = { nifti: UseNiftiViewerResult };
 
@@ -14,7 +14,6 @@ export default function ViewerCanvas({ nifti }: ViewerCanvasProps) {
     handleAnnotationMouseDown,
     handleAnnotationMouseMove,
     handleAnnotationMouseUp,
-    handleWheel,
     renderSlice,
   } = nifti;
 
@@ -48,7 +47,6 @@ export default function ViewerCanvas({ nifti }: ViewerCanvasProps) {
             onMouseMove={handleAnnotationMouseMove}
             onMouseUp={handleAnnotationMouseUp}
             onMouseLeave={handleAnnotationMouseUp}
-            onWheel={handleWheel}
             style={{
               cursor,
               maxWidth: "100%",

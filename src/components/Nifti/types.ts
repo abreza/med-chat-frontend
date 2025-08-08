@@ -57,13 +57,13 @@ export interface SnackbarState {
 }
 
 export const ORGAN_COLORS = {
-  liver: "rgb(255, 0, 0)",
-  spleen: "rgb(0, 255, 0)",
-  kidney_right: "rgb(0, 0, 255)",
-  kidney_left: "rgb(255, 255, 0)",
-  gallbladder: "rgb(255, 0, 255)",
-  stomach: "rgb(0, 255, 255)",
-  pancreas: "rgb(128, 0, 128)",
+  liver: [255, 0, 0],
+  spleen: [0, 255, 0],
+  kidney_right: [0, 0, 255],
+  kidney_left: [255, 255, 0],
+  gallbladder: [255, 0, 255],
+  stomach: [0, 255, 255],
+  pancreas: [128, 0, 128],
 };
 
 export const AVAILABLE_ORGANS = [

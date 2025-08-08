@@ -25,8 +25,8 @@ import {
   BrushOutlined as BrushIcon,
   PlayArrow as RunIcon,
 } from "@mui/icons-material";
-import { UseNiftiViewerResult } from "./hooks/useNiftiViewer";
 import HighlightAlt from "@mui/icons-material/HighlightAlt";
+import { UseNiftiViewerResult } from "./hooks/nifti-viewer-types";
 
 const AVAILABLE_ORGANS = [
   "liver",
